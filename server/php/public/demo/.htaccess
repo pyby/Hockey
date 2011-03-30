@@ -1,0 +1,8 @@
+AuthName "Login / Password to iOS Store"
+AuthType Basic
+AuthUserFile "InsertFullPathToTheIncludeFolder/htpasswd_demo"
+Require valid-user
+
+# Disable http
+SSLRequireSSL
+

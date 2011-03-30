@@ -1,0 +1,28 @@
+
+AddType application/octet-stream .ipa
+<Files *.ipa>
+  Header set Content-Disposition attachment
+</Files>
+
+AddType application/octet-stream .mobileprovision
+<Files *.mobileprovision>
+  Header set Content-Disposition attachment
+</Files>
+
+<Files *.*>
+  order allow,deny
+  deny from all
+</Files>
+
+<Files ~ "\.(html|php|css|png|ipa|plist|mobileprovision)$">
+  order allow,deny
+  allow from all
+</Files>
+
+# Always redirect to https
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
+
+# Disable http
+# SSLRequireSSL
