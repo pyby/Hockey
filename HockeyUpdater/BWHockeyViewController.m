@@ -471,15 +471,23 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     BOOL shouldAutorotate;
-    
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        shouldAutorotate = (interfaceOrientation == UIInterfaceOrientationPortrait ||
-                            interfaceOrientation == UIInterfaceOrientationLandscapeLeft ||
-                            interfaceOrientation == UIInterfaceOrientationLandscapeRight);
-    } else {
-        shouldAutorotate = UIInterfaceOrientationIsLandscape(interfaceOrientation);
-    }
-    
+	
+	if (self.parentViewController.parentViewController != nil) // ViewController return with the optionnal delegate method (first parentViewController is the NavigationViewController)
+	{
+		UIViewController *delegateParentViewController = self.parentViewController.parentViewController;
+		shouldAutorotate = [delegateParentViewController shouldAutorotateToInterfaceOrientation:interfaceOrientation];
+	}
+	else
+	{
+		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+			shouldAutorotate = (interfaceOrientation == UIInterfaceOrientationPortrait ||
+								interfaceOrientation == UIInterfaceOrientationLandscapeLeft ||
+								interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+		} else {
+			shouldAutorotate = YES;
+		}
+	}
+
     return shouldAutorotate;
 }
 
