@@ -26,7 +26,7 @@
 #import "BWGlobal.h"
 #import "BWHockeyViewController.h"
 
-@interface NSString (appVersionExtension)
+@interface NSString (HLSAppVersionExtension)
 
 - (NSString *)appVersion;
 

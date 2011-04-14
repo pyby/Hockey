@@ -27,7 +27,7 @@
 #import "JSON.h"
 #import <sys/sysctl.h>
 
-@implementation NSString (appVersionExtension)
+@implementation NSString (HLSAppVersionExtension)
 
 - (NSString *)appVersion {
     NSString *version = self;
