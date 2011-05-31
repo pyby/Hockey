@@ -24,6 +24,14 @@ if(!empty($_POST['store']))
     	die();
     }
     
+    // Test with lower case
+    $folder = dirname(__FILE__) . "/" . strtolower($key);
+    if(file_exists($folder))
+    {
+    	header('Location: '.strtolower($key)); 
+    	die();
+    }
+    
     $noStore = true;
 }
 
