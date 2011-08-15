@@ -266,16 +266,16 @@
             var agent = navigator.userAgent;
 
             if (agent.indexOf('iPad') != -1) {
-                if (agent.indexOf('OS 4') != -1) {
-                    isiPad4Device = true;
+                if (agent.indexOf('OS 3') != -1) {
+                	isOldIOSDevice = true;
                 } else {
-                    isOldIOSDevice = true;
+                    isiPad4Device = true;
                 }
             } else if (agent.indexOf('iPhone') != -1) {
-                if (agent.indexOf('iPhone OS 4') != -1) {
-                    isNewIOSDevice = true;
+                if ((agent.indexOf('iPhone OS 3') != -1) || (agent.indexOf('iPhone OS 2') != -1) || (agent.indexOf('iPhone OS 1') != -1)) {
+                	isOldIOSDevice = true;
                 } else {
-                    isOldIOSDevice = true;
+                    isNewIOSDevice = true;
                 }
             }
             
