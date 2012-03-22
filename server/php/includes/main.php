@@ -209,9 +209,9 @@ class iOSUpdater
                         $found = true;
                         $content .= $newline."\n";
                     }
-                    elseif (($aproxid[3] != "") && ((time() - $aproxid[2]) < 1800)) // 30 min for existing link with an udid (ideviceid)
+                    elseif (($aproxid[3] != "") && ((time() - $aproxid[2]) < 5400)) // 90 min for existing link with an udid (ideviceid) - (was 30 min befor)
                     	$content .= $newline."\n";
-                    elseif ((time() - $aproxid[2]) < 300) // 5 min for existing link
+                    elseif ((time() - $aproxid[2]) < 3600) // 60 min for existing link - (was 5 min befor)
                     	$content .= $newline."\n";
                 }
             endforeach;
@@ -253,9 +253,9 @@ class iOSUpdater
                 if (count($aproxid) == 4) {
                     // is this the same proxid, same folder
                     if (($aproxid[0] == $proxid) && ($aproxid[1] == $appFolder)) {
-                    	if (($aproxid[3] != nil) && ($aproxid[3] == $ideviceid) && ((time() - $aproxid[2]) < 1800)) // time < 30 min and udid (ideviceid) is the same
+                    	if (($aproxid[3] != nil) && ($aproxid[3] == $ideviceid) && ((time() - $aproxid[2]) < 5400)) // 90 min for existing link with an udid (ideviceid) - (was 30 min befor)
                     		$found = true;
-                    	elseif ((time() - $aproxid[2]) < 300) // time < 5min
+                    	elseif ((time() - $aproxid[2]) < 3600) // 60 min for existing link - (was 5 min befor)
                         	$found = true;
                     }
                 }
