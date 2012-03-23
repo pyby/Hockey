@@ -173,8 +173,9 @@ class iOSUpdater
     protected function getProxid()
     {
     	$session_id = session_id();
-    	$fivemin = floor(date("i")/5);
-    	$proxid = sha1(session_id().$this->appDirectory.date("Y/m/d-H:").$fivemin);
+    	//$fivemin = floor(date("i")/30); // (was 5 min befor)
+    	//$proxid = sha1(session_id().$this->appDirectory.date("Y/m/d-H:").$fivemin);
+    	$proxid = sha1(session_id().$this->appDirectory.date("Y/m/d-H:00")); // hardcore for hour
     	
     	$ideviceid = isset($_GET['ideviceid']) ? $_GET['ideviceid'] : null;
     	if (!ereg("^[0-9a-fA-F]{40}$",$ideviceid)) $ideviceid = null; // 40 hexadecimal caracters "^[:xdigit:]{40}$"
@@ -191,6 +192,7 @@ class iOSUpdater
             $lines = explode("\n", $content);
             $content = "";
             $found = false;
+            
             foreach ($lines as $i => $line) :
                 if ($line == "") continue;
                 $aproxid = explode( ";", $line);
@@ -224,8 +226,10 @@ class iOSUpdater
                 $content .= $thisproxid;
             }
             
-            // write back the updated stats
-            @file_put_contents($filename, $content);			
+            // write back the proxylist
+            @file_put_contents($filename, $content);
+            
+            $this->removeProxIpa();		
 			
 			return $proxid;
 		}
@@ -270,6 +274,41 @@ class iOSUpdater
 		}
 		
 		return false;
+    }
+    
+    // remove old proxy ipa files
+    protected function removeProxIpa()
+    {
+		$proxidlist = array();
+		$filename = dirname(HOCKEY_INCLUDE_DIR) .'/proxylist.txt';
+		$content = @file_get_contents($filename);
+            
+        $lines = explode("\n", $content);
+        $content = "";
+        $found = false;
+        foreach ($lines as $i => $line) {
+            if ($line == "") continue;
+            $aproxid = explode( ";", $line);
+            
+            if (count($aproxid) == 4) {
+            	$proxidlist[] = $aproxid[0];
+            }
+        }
+        
+        $files = scandir(dirname($this->appDirectory) . '/proxy/');
+        
+		foreach ($files as $file)
+		{
+			$fileName = explode("-", $file);
+			if(count($fileName) == 2)
+			{
+				$fileid = $fileName[0];
+				if (!in_array($fileid, $proxidlist))
+				{
+					unlink(dirname($this->appDirectory) . '/proxy/' . $file);
+				}	
+			}
+		}   
     }
     
     protected function array_orderby()
@@ -501,8 +540,14 @@ class iOSUpdater
 			$subPath = null;
 			$ipa_url = null;
 			if(count($bundles) == 2) {
+				$proxyFileName = $this->proxid . '-' . md5($udid) . md5($ipa);
+				$proxyFilePath = dirname($this->appDirectory) . '/proxy/' . $proxyFileName;
+				if (!(file_exists($proxyFilePath) || is_link($proxyFilePath)))
+					link($ipa, $proxyFilePath);
 				$subPath = $bundles[0] . "/";
-				$ipa_url = dirname(dirname($protocol."://".$_SERVER['SERVER_NAME'].$port.$_SERVER['REQUEST_URI'])) . '/proxy.php?type=' . self::TYPE_IPA . '&amp;bundleidentifier=' . $_GET['bundleidentifier'] . '&amp;proxid=' . $this->proxid;			
+				//$ipa_url = dirname(dirname($protocol."://".$_SERVER['SERVER_NAME'].$port.$_SERVER['REQUEST_URI'])) . '/proxy.php?type=' . self::TYPE_IPA . '&amp;bundleidentifier=' . $_GET['bundleidentifier'] . '&amp;proxid=' . $this->proxid; // url without proxy files	
+				$ipa_url = dirname(dirname($protocol."://".$_SERVER['SERVER_NAME'].$port.$_SERVER['REQUEST_URI'])) . '/proxy/' . urlencode($proxyFileName);	// url with proxy files	
+
 			}
 			else {
 			
@@ -529,7 +574,7 @@ class iOSUpdater
             echo $plist_content;
 
         } else if ($type == self::TYPE_IPA) {
-            // send latest profile for the given bundleidentifier
+            // send latest ipa for the given bundleidentifier
             header('Content-Disposition: attachment; filename=' . urlencode(basename($ipa)));
             header('Content-Type: application/octet-stream;');
             header('Content-Transfer-Encoding: binary');

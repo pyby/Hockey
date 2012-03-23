@@ -35,8 +35,13 @@
         <link rel="stylesheet" href="../_hockey/blueprint/plugins/buttons/screen.css" type="text/css" media="screen, projection">
         <link rel="stylesheet" type="text/css" href="../_hockey/css/stylesheet.css">
         <link rel="alternate" type="application/rss+xml" title="iOS Apps Updates" href="feed.php" /> <!-- Work with reader wich accept htaccess -->
+        <script type="text/JavaScript">
+			function timedRefresh(timeoutPeriod) {
+			setTimeout("location.reload(true);",timeoutPeriod);
+			}
+		</script>
     </head>
-    <body>
+    <body onload="JavaScript:timedRefresh(3600000);">
         <div id="container" class="container">
             
             <?
