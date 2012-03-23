@@ -204,15 +204,19 @@ class iOSUpdater
                         $found = true;
                         $content .= $newline."\n";
                     }
-                    elseif ($aproxid[3] == $ideviceid) {
+                    elseif (($aproxid[3] != "") && ($aproxid[3] == $ideviceid)) {
                         $newline = $thisproxid;
                         $found = true;
                         $content .= $newline."\n";
                     }
                     elseif (($aproxid[3] != "") && ((time() - $aproxid[2]) < 5400)) // 90 min for existing link with an udid (ideviceid) - (was 30 min befor)
+                    {
                     	$content .= $newline."\n";
+                    }
                     elseif ((time() - $aproxid[2]) < 3600) // 60 min for existing link - (was 5 min befor)
+                    {
                     	$content .= $newline."\n";
+                    }
                 }
             endforeach;
             
