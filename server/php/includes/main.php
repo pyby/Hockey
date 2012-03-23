@@ -643,7 +643,7 @@ class iOSUpdater
         		else
                 	$newApp[self::INDEX_SHORT_VERSION]  = $newApp[self::INDEX_VERSION];
                 	
-                $newApp[self::INDEX_DATE]           = filectime($ipa);
+                $newApp[self::INDEX_DATE]           = filemtime($ipa);
                 $newApp[self::INDEX_DIR]            = $file;
                 $newApp[self::INDEX_IMAGE]          = substr($image, strpos($image, $file));
                 $newApp[self::INDEX_NOTES]          = $note ? nl2br_skip_html(file_get_contents($note)) : '';
@@ -651,7 +651,7 @@ class iOSUpdater
 
                 if ($provisioningProfile) {
                     $newApp[self::INDEX_PROFILE]        = $provisioningProfile;
-                    $newApp[self::INDEX_PROFILE_UPDATE] = filectime($provisioningProfile);
+                    $newApp[self::INDEX_PROFILE_UPDATE] = filemtime($provisioningProfile);
                 }
                 
                 // now get the current user statistics
